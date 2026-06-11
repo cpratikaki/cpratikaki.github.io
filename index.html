@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Chrysa Pratikaki</title>
+    <meta name="author" content="Chrysa Pratikaki">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <style>
+      .abstract-btn {
+        cursor: pointer;
+        color: #1772d0;
+      }
+      .abstract-btn:hover { color: #f09228; }
+      .abstract-row { display: none; background: #fff; }
+      .abstract-row td {
+        padding: 8px 16px 12px 16px;
+        border-left: 3px solid #ccc;
+        color: #444;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .pub-img-cell .one {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .pub-img-cell .two {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 0; left: 0;
+        transition: opacity .2s ease-in-out;
+        -webkit-transition: opacity .2s ease-in-out;
+      }
+      .pub-img-cell .one img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+    </style>
+    <script>
+      function toggleAbstract(id) {
+        var el = document.getElementById(id);
+        el.style.display = (el.style.display === 'table-row') ? 'none' : 'table-row';
+      }
+    </script>
+  </head>
+
+  <body>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+
+          <!-- Bio section -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr style="padding:0px">
+              <td style="padding:2.5%;width:63%;vertical-align:middle">
+                <p class="name" style="text-align: center;">
+                  Chrysa Pratikaki
+                </p>
+                <p>
+                  I am a PhD student at Imperial College London, Computing Department, advised by <a href="https://scholar.google.com/citations?user=Z_UoQFsAAAAJ&hl=en">Dr. Jiankang Deng</a>.
+                  and <a href="https://scholar.google.com/citations?user=QKOH5iYAAAAJ&hl=en">Prof. Stefanos Zafeiriou</a>.
+                </p>
+                <p>
+                  My research focuses on <strong>human motion generation</strong> and human-object interaction,
+                  with particular interest in synthesising physically plausible 3D motions involving
+                  multiple objects and scenes.
+                </p>
+                <p>
+                  Previously, I received my MEng Diploma in Electrical and Computer Engineering from the National Technincal
+                  University of Athens (NTUA). I conducted my diploma thesis on Sign Language Production, 
+                  supervised by <a href="https://scholar.google.com/citations?user=Baj1CKYAAAAJ&hl=en">Dr. Anastasios Rousos</a> and <a href="https://scholar.google.com/citations?user=A2XydgGCY9gC&hl=el">Prof. Petros Maragos</a>.
+                </p>
+              </td>
+              <td style="padding:2.5%;width:37%;max-width:37%;text-align:center;vertical-align:middle">
+                <img style="width:100%;max-width:100%;object-fit:cover;border-radius:50%;" alt="profile photo" src="images/profile.jpeg">
+                <p style="margin:8px 0 2px 0;">
+                  <a href="mailto:c.pratikaki@imperial.ac.uk" style="font-size:13px;">c.pratikaki@imperial.ac.uk</a>
+                </p>
+                <p style="margin:4px 0 0 0;">
+                  <a href="https://scholar.google.com/citations?user=CaKafCMAAAAJ&hl=en" title="Google Scholar"><img src="images/scholar.png" alt="Scholar" style="height:22px;vertical-align:middle;margin:0 6px;"></a>
+                  <a href="https://github.com/cpratikaki" title="GitHub"><img src="images/githublogo.png" alt="GitHub" style="height:22px;vertical-align:middle;margin:0 6px;"></a>
+                  <a href="https://www.linkedin.com/in/chrysapratikaki/" title="LinkedIn"><img src="images/linked.png" alt="LinkedIn" style="height:22px;vertical-align:middle;margin:0 6px;"></a>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <!-- Publications heading -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+              <td style="padding:16px 16px 0 16px;width:100%;vertical-align:middle">
+                <h2>Publications</h2>
+                <hr style="border:none;border-top:1px solid #ccc;margin-top:6px;">
+              </td>
+            </tr>
+          </tbody></table>
+
+          <!-- Publications -->
+          <table style="width:100%;border:0px;border-spacing:0px 2px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+            <!-- Publication 1: Dex2HOI -->
+            <tr onmouseout="dex2hoi_stop()" onmouseover="dex2hoi_start()">
+              <td class="pub-img-cell" style="padding:10px 12px;width:35%;vertical-align:middle;background:#fff;">
+                <div class="one">
+                  <div class="two" id="dex2hoi_image">
+                    <img src="images/dex2hoi.gif" width="100%">
+                  </div>
+                  <img src="images/dex2hoistatic.jpg" width="100%">
+                </div>
+                <script type="text/javascript">
+                  function dex2hoi_start() {
+                    document.getElementById('dex2hoi_image').style.opacity = "1";
+                  }
+                  function dex2hoi_stop() {
+                    document.getElementById('dex2hoi_image').style.opacity = "0";
+                  }
+                  dex2hoi_stop();
+                </script>
+              </td>
+              <td style="padding:8px 12px;width:65%;vertical-align:middle">
+                <a href="https://arxiv.org/abs/2605.30444">
+                  <span class="papertitle">Dex2HOI: Dexterous Bimanual Two-Object Interaction Generation</span>
+                </a>
+                <br>
+                <u>Chrysa Pratikaki</u>, Pablo Ruiz-Ponce, Jiankang Deng, Stefanos Zafeiriou and Rolandos Alexandros Potamias
+                <br>
+                <em>Preprint</em>, 2026
+                <br>
+                <a href="#">project page</a>
+                &nbsp;/&nbsp;<a href="https://arxiv.org/abs/2605.30444">arXiv</a>
+                &nbsp;/&nbsp;<a href="https://github.com/cpratikaki/Dex2HOI">code</a>
+                &nbsp;/&nbsp;<a class="abstract-btn" onclick="toggleAbstract('abs_dex2hoi')">abstract</a>
+              </td>
+            </tr>
+            <tr id="abs_dex2hoi" class="abstract-row">
+              <td colspan="2">Recent advances in 4D Human-Object Interaction (HOI) generation have enabled increasingly realistic motion synthesis, particularly for single-object manipulation. Yet current research overlooks an inherent property of human behavior: people naturally coordinate both hands and manipulate multiple objects simultaneously. To address this gap, we present Dex2HOI, a unified diffusion model for single- and two-object HOI synthesis from text. At its core, Dex2HOI employs a Dual-Stream Diffusion approach, where each object is processed in a dedicated interaction stream and coordinated through bidirectional cross-attention. To synthesize the final motion, we introduce a Motion Fusion Network integrated with novel hand-relative object representations and contact-aware conditioning applied across the whole sequence. By sampling the diffusion process autoregressively over prefix-conditioned windows, Dex2HOI generates arbitrarily long sequences at real-time speed omitting redundant test-time optimization, achieving up to ×540 inference speed-up over prior state-of-the-art methods. Extensive evaluation on both single- and two-object benchmarks demonstrates state-of-the-art quantitative results, taking a step beyond conventional single-object HOI generation and toward expressive multi-object manipulation.</td>
+            </tr>
+            <tr><td colspan="2" style="padding:0;"><hr style="border:none;border-top:1px solid #ccc;margin:0;"></td></tr>
+
+            <!-- Publication 2: Text-to-Sign Language -->
+            <tr onmouseout="petra_stop()" onmouseover="petra_start()">
+              <td class="pub-img-cell" style="padding:10px 12px;width:35%;vertical-align:middle;background:#fff;">
+                <div class="one">
+                  <div class="two" id="petra_image">
+                    <img src="images/sltat.gif" width="100%">
+                  </div>
+                  <img src="images/sltat_static.jpg" width="100%">
+                </div>
+                <script type="text/javascript">
+                  function petra_start() {
+                    document.getElementById('petra_image').style.opacity = "1";
+                  }
+                  function petra_stop() {
+                    document.getElementById('petra_image').style.opacity = "0";
+                  }
+                  petra_stop();
+                </script>
+              </td>
+              <td style="padding:8px 12px;width:65%;vertical-align:middle">
+                <a href="https://dl.acm.org/doi/full/10.1145/3742886.3756732">
+                  <span class="papertitle">Text-to-Sign Language Production via Intermediate Skeletal Representations Using Transformers and Neural Rendering</span>
+                </a>
+                <br>
+                <u>Chrysa Pratikaki</u>, Stavroula-Evita Fotinea, Eleni Efthimiou, Panagiotis Paraskevas Filntisis, Anastasios Roussos and Petros Maragos
+                <br>
+                <em>SLTAT Workshop in ACM IVA</em>, 2025
+                <br>
+                <a href="https://dl.acm.org/doi/full/10.1145/3742886.3756732">paper</a>
+                &nbsp;/&nbsp;<a class="abstract-btn" onclick="toggleAbstract('abs_petra')">abstract</a>
+              </td>
+            </tr>
+            <tr id="abs_petra" class="abstract-row">
+              <td colspan="2">Computer-assisted Sign Language (SL) systems offer a promising solution for real-time communication and education within Deaf and Hard-of-Hearing (DHH) communities. In this paper we tackle the production of Sign Language videos from text sentences by proposing a novel two-way transformer-based translation system. We use extended 2D skeletal poses from MediaPipe as an intermediate representation step. Following our Sign Language Production (SLP) pipeline, we generate a synthetic, highly-detailed SL output, that mimics signers from the original dataset, by performing neural rendering on the transformer-generated skeletal poses. This enables the creation of signer-specific SLP systems from a relatively limited training set. We evaluate on a large-scale Greek Sign Language Dataset and conduct an extended user evaluation study, proving our pipeline’s effectiveness across different signers and a broad vocabulary.</td>
+            </tr>
+            <tr><td colspan="2" style="padding:0;"><hr style="border:none;border-top:1px solid #ccc;margin:0;"></td></tr>
+
+            <!-- Publication 3: Greek Sign Language -->
+            <tr onmouseout="sltat_stop()" onmouseover="sltat_start()">
+              <td class="pub-img-cell" style="padding:10px 12px;width:35%;vertical-align:middle;background:#fff;">
+                <div class="one">
+                  <div class="two" id="sltat_image">
+                    <img src="images/petra.gif" width="100%">
+                  </div>
+                  <img src="images/petra_static.jpg" width="100%">
+                </div>
+                <script type="text/javascript">
+                  function sltat_start() {
+                    document.getElementById('sltat_image').style.opacity = "1";
+                  }
+                  function sltat_stop() {
+                    document.getElementById('sltat_image').style.opacity = "0";
+                  }
+                  sltat_stop();
+                </script>
+              </td>
+              <td style="padding:8px 12px;width:65%;vertical-align:middle">
+                <a href="https://dl.acm.org/doi/full/10.1145/3733155.3733204">
+                  <span class="papertitle">A Transformer-Based Framework for Greek Sign Language Production using Extended Skeletal Motion Representations</span>
+                </a>
+                <br>
+                <u>Chrysa Pratikaki</u>, Panagiotis Paraskevas Filntisis, Athanasios Katsamanis, Anastasios Roussos, Petros Maragos
+                <br>
+                <em>ACM PETRA</em>, 2025
+                &nbsp;<span style="background:#fffde7;border:1px solid #f0c040;border-radius:6px;padding:2px 7px;font-size:12px;white-space:nowrap;">🏆 Best Paper Award</span>
+                <br>
+                <a href="https://dl.acm.org/doi/full/10.1145/3733155.3733204">paper</a>
+                &nbsp;/&nbsp;<a class="abstract-btn" onclick="toggleAbstract('abs_sltat')">abstract</a>
+              </td>
+            </tr>
+            <tr id="abs_sltat" class="abstract-row">
+              <td colspan="2">Sign Languages are the primary form of communication for Deaf communities across the world. To break the communication barriers between the Deaf and Hard-of-Hearing and the hearing communities, it is imperative to build systems capable of translating the spoken language into sign language and vice versa. Building on insights from previous research, we propose a deep learning model for Sign Language Production (SLP), which to our knowledge is the first attempt on Greek SLP. We tackle this task by utilizing a transformer-based architecture that enables the translation from text input to human pose keypoints, and the opposite. We evaluate the effectiveness of the proposed pipeline on the Greek SL dataset Elementary23, through a series of comparative analyses and ablation studies. Our pipeline’s components, which include data-driven gloss generation, training through video to text translation and a scheduling algorithm for teacher forcing - auto-regressive decoding seem to actively enhance the quality of produced SL videos.</td>
+            </tr>
+            <tr><td colspan="2" style="padding:0;"><hr style="border:none;border-top:1px solid #ccc;margin:0;"></td></tr>
+
+          </tbody></table>
+
+          <!-- Footer -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+              <td style="padding:0px">
+                <br>
+                <p style="text-align:right;font-size:small;">
+                  Website template from <a href="https://jonbarron.info">Jon Barron</a>.
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+        </td>
+      </tr>
+    </tbody></table>
+
+  </body>
+</html>
