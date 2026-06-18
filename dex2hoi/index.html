@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dex2HOI: Generalizable Dexterous Hand-Object Interaction Generation via Reference-Guided Diffusion</title>
+  <meta name="description" content="Dex2HOI: Generalizable Dexterous Hand-Object Interaction Generation via Reference-Guided Diffusion. Chrysa Pratikaki et al., Imperial College London.">
+  <meta name="author" content="Chrysa Pratikaki">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .header {
+      text-align: center;
+      padding: 48px 24px 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .paper-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      color: #111;
+    }
+
+    .authors {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+    .authors a { color: #04515a; text-decoration: none; }
+    .authors a:hover { color: #3b94c3; }
+    .affil { font-size: 0.88rem; color: #666; margin-top: 6px; }
+
+    .venue {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .venue strong { color: #333; }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid #04515a;
+      color: #04515a;
+      background: #fff;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn:hover { background: #04515a; color: #fff; }
+    .btn svg { width: 16px; height: 16px; }
+
+    /* ── Section layout ──────────────────────────────────────── */
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #111;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 6px;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid #eee;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Teaser / video players ──────────────────────────────── */
+    .teaser-video {
+      width: 100%;
+      max-width: 860px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    .teaser-caption {
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    /* ── Abstract ────────────────────────────────────────────── */
+    .abstract-text {
+      font-size: 0.97rem;
+      color: #333;
+      line-height: 1.7;
+      text-align: justify;
+    }
+
+    /* ── Results grid ────────────────────────────────────────── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+
+    .result-item {
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .result-item video {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: block;
+      background: #000;
+      object-fit: fill;
+    }
+
+    .result-caption {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+    }
+
+    /* ── Supplementary embed ─────────────────────────────────── */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000;
+    }
+    .video-wrapper iframe,
+    .video-wrapper video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+
+    /* ── Method ────────────────────────────────────────────── */
+    .method-figure {
+      width: 100%;
+      height: 520px;
+      border: none;
+      border-radius: 8px;
+      display: block;
+    }
+    .contributions {
+      list-style: none;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .contributions li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.97rem;
+      color: #333;
+      line-height: 1.6;
+    }
+    .contrib-num {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #04515aa7;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    /* ── BibTeX ──────────────────────────────────────────────── */
+    .bibtex-box {
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      overflow-x: auto;
+      color: #333;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.82rem;
+      color: #999;
+    }
+    footer a { color: #999; }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .paper-title { font-size: 1.7rem; }
+      .results-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<div class="header">
+  <h1 class="paper-title">
+    Dex2HOI: Dexterous Bimanual<br>Two-Object Interaction Generation
+  </h1>
+
+  <p class="authors">
+    <a href="https://cpratikaki.github.io/">Chrysa Pratikaki</a><sup>1</sup>,
+    <a href="https://pabloruizponce.com/">Pablo Ruiz-Ponce</a><sup>2</sup>,
+    <a href="https://jiankangdeng.github.io/">Jiankang Deng</a><sup>1</sup>,
+    <a href="https://scholar.google.com/citations?user=QKOH5iYAAAAJ&hl=en">Stefanos Zafeiriou</a><sup>1</sup>,
+    <a href="https://rolpotamias.github.io/">Rolandos Alexandros Potamias</a><sup>1</sup>
+  </p>
+
+  <p class="affil">
+    <sup>1</sup> Imperial College London &nbsp;&nbsp;
+    <sup>2</sup> University of Alicante
+  </p>
+
+  <p class="venue">Preprint</p>
+
+  <div class="btn-row">
+    <!-- Update href values as your links go live -->
+    <a class="btn" href="https://arxiv.org/abs/2605.30444" target="_blank">
+      <!-- arXiv icon -->
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 4h20v16H2V4zm1 1v14h18V5H3zm3 2h3l3 4 3-4h3l-4.5 6L18 17h-3l-3-4-3 4H6l4.5-6L6 7z"/></svg>
+      arXiv
+    </a>
+    <a class="btn" href="https://github.com/cpratikaki/Dex2HOI" target="_blank">
+      <!-- GitHub icon -->
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      Code
+    </a>
+    
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ TEASER ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">Teaser</h2>
+  <div style="background:#f5f5f5; border-radius:12px; padding:14px 20px; margin-bottom:20px;">
+    <span style="font-weight:700; color:#04515a;">TL;DR</span>
+    <span style="font-size:0.97rem; color:#333;">&nbsp; Dex2HOI is a Diffusion-based approach to Human-Object Interaction (HOI), that generates dexterous bimanual interactions with one or two objects from text, autoregressively and in real-time — no test-time optimization required.</span>
+  </div>
+  <img src="teaser.png" alt="Dex2HOI teaser" style="width:100%; max-width:860px; display:block; margin:0 auto; border-radius:8px;">
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ ABSTRACT ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">Abstract</h2>
+  <p class="abstract-text">
+    Recent advances in 4D Human-Object Interaction (HOI) generation have enabled increasingly realistic motion synthesis, particularly for single-object manipulation. Yet current research overlooks an inherent property of human behavior: people naturally coordinate both hands and manipulate multiple objects simultaneously. To address this gap, we present Dex2HOI, a unified diffusion model for single- and two-object HOI synthesis from text. At its core, Dex2HOI employs a Dual-Stream Diffusion approach, where each object is processed in a dedicated interaction stream and coordinated through bidirectional cross-attention. To synthesize the final motion, we introduce a Motion Fusion Network integrated with novel hand-relative object representations and contact-aware conditioning applied across the whole sequence. By sampling the diffusion process autoregressively over prefix-conditioned windows, Dex2HOI generates arbitrarily long sequences at real-time speed omitting redundant test-time optimization, achieving up to ×540 inference speed-up over prior state-of-the-art methods. Extensive evaluation on both single- and two-object benchmarks demonstrates state-of-the-art quantitative results, taking a step beyond conventional single-object HOI generation and toward expressive multi-object manipulation.
+  </p>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ METHOD ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">Method</h2>
+  <img src="method.jpg" alt="Dex2HOI method" style="width:100%; display:block; border-radius:8px;">
+  <div style="background:#f5f5f5; border-radius:12px; padding:20px 24px; margin-top:28px;">
+    <p style="font-weight:700; font-size:1rem; margin-bottom:12px; color:#111;">Key Contributions</p>
+    <ul class="contributions" style="margin-top:0;">
+      <li>
+        <span class="contrib-num">1</span>
+        <span>Dex2HOI generates HOI sequences from text in single-shot, avoiding costly optimization routes.</span>
+      </li>
+      <li>
+        <span class="contrib-num">2</span>
+        <span>Dex2HOI unifies single- and two-object HOI generation in a single framework.</span>
+      </li>
+      <li>
+        <span class="contrib-num">3</span>
+        <span>Dex2HOI can generate arbitrarily long HOI sequences autoregressively.</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ VIDEO RESULTS ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">Video Results</h2>
+  <p style="font-size:0.9rem; color:#666; margin-bottom:16px;">
+    One Object Sequences - Each clip shows a generated hand-object interaction from the GRAB test set.
+  </p>
+
+  <div class="results-grid">
+
+    <!-- Result 1 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/torus_inspect.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Torus &nbsp;·&nbsp; Action: Inspect</p>
+    </div>
+
+    <!-- Result 2 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 3px 0 0);">
+        <source src="videos/mug_drink.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Mug &nbsp;·&nbsp; Action: Drink</p>
+    </div>
+
+    <!-- Result 3 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/elephant_pass.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Elephant &nbsp;·&nbsp; Action: Pass</p>
+    </div>
+
+    <!-- Result 4 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 0 3px 0);">
+        <source src="videos/camera.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Camera &nbsp;·&nbsp; Action: Take Picture</p>
+    </div>
+
+    <!-- Result 5 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 3px 3px 0);">
+        <source src="videos/headphones_wear.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Headphones &nbsp;·&nbsp; Action: Wear</p>
+    </div>
+
+    <!-- Result 6 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 0 3px 0);">
+        <source src="videos/glasses.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Object: Glasses &nbsp;·&nbsp; Action: Wear</p>
+    </div>
+
+  </div>
+
+  <hr style="border:none; border-top:1px solid #ddd; margin:32px 0;">
+
+  <p style="font-size:0.9rem; color:#666; margin-top:0; margin-bottom:16px;">
+    Two Object Sequences - Each clip shows a bimanual two-object interaction from the HUMOTO test set.
+  </p>
+
+  <div class="results-grid">
+
+    <!-- 2obj Result 1 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/1.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Mixing bowl, spoon</p>
+    </div>
+
+    <!-- 2obj Result 2 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 3px 0 0);">
+        <source src="videos/2.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Vacuum flask, mug</p>
+    </div>
+
+    <!-- 2obj Result 3 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/3.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Frying pan, wok turner</p>
+    </div>
+
+    <!-- 2obj Result 4 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/4.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Spoon, mug</p>
+    </div>
+
+    <!-- 2obj Result 5 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline style="clip-path: inset(0 3px 0 0);">
+        <source src="videos/5.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Plate, spoon</p>
+    </div>
+
+    <!-- 2obj Result 6 -->
+    <div class="result-item">
+      <video autoplay muted loop playsinline>
+        <source src="videos/6.mp4" type="video/mp4">
+      </video>
+      <p class="result-caption">Objects: Knife, fork</p>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ PRESENTATION VIDEO ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">Presentation Video</h2>
+  <p style="font-size:0.9rem; color:#666; margin-bottom:16px;">
+  </p>
+  <div class="video-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/uz0enYag8Rg?rel=0&modestbranding=1"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ BIBTEX ══════════════════════ -->
+<div class="section">
+  <h2 class="section-title">BibTeX</h2>
+  <pre class="bibtex-box">@misc{pratikaki2026dex2hoidexterousbimanualtwoobject,
+      title={Dex2HOI: Dexterous Bimanual Two-Object Interaction Generation}, 
+      author={Chrysa Pratikaki and Pablo Ruiz-Ponce and Jiankang Deng and Stefanos Zafeiriou and Rolandos Alexandros Potamias},
+      year={2026},
+      eprint={2605.30444},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2605.30444}, 
+}</pre>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <p>
+    <a href="https://cpratikaki.github.io">← Back to homepage</a>
+  </p>
+</footer>
+
+</body>
+</html>
